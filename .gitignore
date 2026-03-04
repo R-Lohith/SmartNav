@@ -1,0 +1,32 @@
+# Node modules (NEVER commit these - they are huge and cause GitHub to show wrong language)
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment secrets
+.env
+.env.local
+.env.production
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

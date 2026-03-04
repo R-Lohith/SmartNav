@@ -44,7 +44,7 @@ By utilizing Python to continuously scrape live regional newspaper sites, breaki
 
 ## 🔄 System Architecture Flow
 
-![Flow Diagram](images/flow_diagram.png)  
+![Flow Diagram](image/flowchart.jpeg)  
 *(An abstract overview of the SmartNav dispatch sequence)*
 
 The architecture strictly delineates the User client from the Police client, connected asynchronously by the server node logic:
@@ -59,19 +59,20 @@ The architecture strictly delineates the User client from the Police client, con
 SmartNav’s frontend pushes heavy WebGL elements for immersive data analysis.
 
 ### 1. The Risk Intelligence Command Center
-![Choropleth Dashboard](images/choropleth_dashboard.png)  
+![Choropleth Dashboard](image/sample7.jpeg)  
 *The tactical 2D command map aggregates backend Geospatial data. It renders the state using colored heat dots (`Red=Critical`, `Yellow=Moderate`, `Green=Safe`). The left panel crunches macro analytics (e.g., `87.1% Avg Safety`) and pushes a live **Alert Feed** pulling directly from the news scraping mechanism.*
 
 ### 2. 3D Globe Intelligence Viewer (CesiumJS)
-![3D Globe Dashboard](images/3d_globe_dashboard.png)  
+![3D Globe Dashboard](image/sample1.jpeg)  
 *For deeper tactical awareness, the engine swaps instances to a cinematic 3D Earth using WebGL. Officers can search specific Latitude/Longitude hashes, causing the camera to physically "Fly-To" the location from space down to street level, mapping the surrounding terrain instantly.*
 
 ### 3. Identity Verification & Intel Platform
-![Security Intel Platform](images/security_intel_platform.png)  
-*A complete profile lookup node. Querying a UID (e.g. `Lingesh G R`) pulls their stored Firebase constraints (Contact Intel, Biometric Profile). This screen is critical for kidnapped or missing-person events, enabling **GPS Trackping** and historical **Heat Trails**.*
+![Security Intel Platform](image/sample2.jpeg)  
+*A complete profile lookup node. Querying a UID pulls their stored Firebase constraints (Contact Intel, Biometric Profile). This screen is critical for kidnapped or missing-person events, enabling **GPS Tracking** and historical **Heat Trails**.*
 
 ### 4. Automated Geo-Fencing Logs
-![Restricted Area Logs](images/restricted_area_logs.png)  
+![Restricted Area Logs](image/log.jpeg)  
+![Restricted Area Map](image/sample4.jpeg)  
 *Law enforcement can asynchronously draw "Geo-fences" (invisible polygons) around specific areas. If any connected user physically crosses the polygon threshold, the React app pushes the breach to this log table. Officers are handed instant red **MATCHING!** alerts for subjects physically violating a restricted space.*
 
 ---
