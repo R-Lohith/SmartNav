@@ -1,0 +1,101 @@
+/* c:\Users\lohit\Desktop\SIH-main\client\src\styles\RestrictedLogs.css */
+.restricted-logs-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+    background-color: var(--bg-primary);
+    overflow-y: auto;
+}
+
+.logs-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.back-btn {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.back-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--accent-primary);
+    background: var(--bg-tertiary);
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-primary);
+}
+
+.alert-icon {
+    color: var(--danger);
+}
+
+.logs-content {
+    padding: 24px;
+    border-radius: 12px;
+}
+
+.logs-table th,
+.logs-table td {
+    padding: 16px;
+    font-size: 14px;
+}
+
+.status-badge.exited {
+    background: rgba(0, 255, 157, 0.15);
+    color: #00ff9d;
+    border: 1px solid rgba(0, 255, 157, 0.3);
+}
+
+.status-badge.not-exited {
+    background: rgba(255, 140, 0, 0.15);
+    color: #ff8c00;
+    border: 1px solid rgba(255, 140, 0, 0.3);
+}
+
+.row-danger {
+    background: rgba(255, 55, 0, 0.05) !important;
+}
+
+.blinking-alert {
+    color: #ff3700;
+    font-weight: bold;
+    font-size: 12px;
+    animation: blinker 1s linear infinite;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #ff3700;
+    background: rgba(255, 55, 0, 0.1);
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+.safe-alert {
+    color: #00ff9d;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #00ff9d;
+    background: rgba(0, 255, 157, 0.1);
+}

@@ -1,0 +1,121 @@
+/* App Container */
+.app {
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Connection Popup */
+.connection-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.connection-popup {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.connection-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.connection-timer {
+    font-size: 24px;
+    font-weight: bold;
+    color: #e53935;
+    margin-top: 15px;
+}
+
+/* Floating User Profile Icon - Top Left */
+.profile-floating {
+    position: fixed;
+    top: 20px;           /* Distance from top */
+    right: 100px;    /* Distance from left */
+    z-index: 1000;
+    background-color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 5px 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.profile-floating:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.profile-floating svg {
+    width: 36px;
+    height: 36px;
+    color: #3b82f6; /* Change icon color */
+}
+
+/* User Info Bar (Top Right) */
+.user-info-bar {
+    position: fixed;
+    top: 0;
+    right: 5%;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border-bottom-left-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logout-btn {
+    padding: 5px 10px;
+    background-color: #e53935;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.logout-btn:hover {
+    background-color: #c62828;
+}
+
+/* Loading Spinner */
+.app-loading {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

@@ -1,0 +1,213 @@
+.home-container {
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Background Grid stays fixed */
+.home-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        linear-gradient(var(--border-subtle) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Top Right Navigation */
+.home-nav {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    display: flex;
+    gap: 1rem;
+    z-index: 100;
+}
+
+.nav-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.nav-btn-login {
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+}
+
+.nav-btn-signup {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+}
+
+.nav-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* Main Content Layout */
+.home-layout {
+    position: relative;
+    z-index: 2;
+    padding: 4rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.home-section-top {
+    text-align: center;
+    max-width: 800px;
+    animation: fadeInDown 1s ease-out;
+}
+
+.globe-center-div {
+    width: 100%;
+    min-height: 600px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, rgba(53, 125, 242, 0.1) 0%, transparent 70%);
+    z-index: 5;
+}
+
+.globe-wrapper-center {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+.home-section-bottom {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    padding: 3rem;
+    border-radius: 32px;
+    line-height: 1.8;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-lg);
+    animation: fadeInUp 1s ease-out both;
+    max-width: 900px;
+}
+
+.home-title-large {
+    font-size: 5rem;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #fff 0%, var(--accent-primary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 40px rgba(53, 125, 242, 0.4));
+}
+
+.home-subtitle-large {
+    font-size: 1.5rem;
+    color: var(--accent-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+.context-p {
+    margin-bottom: 2rem;
+}
+
+.context-p:last-child {
+    margin-bottom: 0;
+}
+
+.badge-container {
+    display: flex;
+    gap: 3rem;
+    margin-top: 3rem;
+    justify-content: center;
+}
+
+.badge-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1rem;
+    color: var(--text-primary);
+    opacity: 0.8;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .home-title-large {
+        font-size: 3rem;
+    }
+
+    .home-nav {
+        top: 1rem;
+        right: 1rem;
+        left: 1rem;
+        justify-content: flex-end;
+    }
+
+    .globe-center-div {
+        height: 400px;
+    }
+
+    .badge-container {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
+    }
+}
