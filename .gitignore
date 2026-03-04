@@ -1,3 +1,8 @@
+# Generated Folium/Python map HTML files (these are HUGE and skew GitHub language stats)
+client/public/*.html
+client/*.html
+client/TamilWards/*.html
+
 # Node modules (NEVER commit these - they are huge and cause GitHub to show wrong language)
 node_modules/
 client/node_modules/
