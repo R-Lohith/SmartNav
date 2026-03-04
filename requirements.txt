@@ -1,0 +1,139 @@
+################################################################################
+#                     SmartNav – Complete Project Requirements                 #
+#                                                                              #
+#  This file documents every library used across all three sub-stacks:         #
+#    1. Python  – Flask geo-analysis microservice  (client/TamilWards/)        #
+#    2. Node.js – Express REST backend             (server/)                   #
+#    3. React   – Vite frontend                    (client/)                   #
+#                                                                              #
+#  HOW TO INSTALL                                                              #
+#  ──────────────────────────────────────────────────────────────────────────  #
+#  Python (run inside client/TamilWards/):                                     #
+#      pip install -r requirements.txt                                         #
+#                                                                              #
+#  Node.js backend (run inside server/):                                       #
+#      npm install                                                             #
+#                                                                              #
+#  React frontend (run inside client/):                                        #
+#      npm install                                                             #
+################################################################################
+
+
+################################################################################
+# ① PYTHON DEPENDENCIES  (client/TamilWards/)                                 #
+################################################################################
+
+# ── Web Framework ──────────────────────────────────────────────────────────── #
+Flask                   # Lightweight WSGI web application framework
+Flask-CORS              # Cross-Origin Resource Sharing support for Flask
+
+# ── Data Processing & Analysis ─────────────────────────────────────────────── #
+pandas                  # DataFrame manipulation, Excel reading/writing
+openpyxl                # Engine for reading/writing .xlsx files with pandas
+xlsxwriter              # Engine used with pd.ExcelWriter for styled Excel output
+
+# ── Geospatial Analysis ────────────────────────────────────────────────────── #
+geopandas               # Geospatial data in Pandas DataFrames (GeoJSON, shapefiles)
+shapely                 # Geometric operations (Point, LineString, Polygon, intersects)
+pyproj                  # Cartographic projections (dependency of geopandas)
+fiona                   # Read/write geospatial data formats (dependency of geopandas)
+
+# ── Interactive Map Generation ─────────────────────────────────────────────── #
+folium                  # Interactive Leaflet.js maps generated from Python
+
+# ── Web Scraping – Requests ────────────────────────────────────────────────── #
+requests                # HTTP library for fetching web pages and APIs
+beautifulsoup4          # HTML/XML parsing for web scraping (The Hindu, TNIE, etc.)
+lxml                    # Fast XML/HTML parser used by BeautifulSoup (xml parser)
+
+# ── Web Scraping – Browser Automation ─────────────────────────────────────── #
+selenium                # Browser automation for JavaScript-heavy news sites
+webdriver-manager       # Automatically manages ChromeDriver binary versions
+
+# ── Concurrency ────────────────────────────────────────────────────────────── #
+# concurrent.futures is part of the Python standard library (no pip install)
+
+
+################################################################################
+# ② NODE.JS / EXPRESS BACKEND DEPENDENCIES  (server/)                         #
+#    Source: server/package.json                                               #
+################################################################################
+
+# ── Web Framework ──────────────────────────────────────────────────────────── #
+# express@^5.1.0            HTTP server and REST API framework
+# body-parser@^2.2.0        Request body parsing middleware (JSON, URL-encoded)
+# cors@^2.8.5               Cross-Origin Resource Sharing middleware
+
+# ── Authentication & Security ──────────────────────────────────────────────── #
+# bcryptjs@^3.0.2           Password hashing using bcrypt algorithm
+# jsonwebtoken@^9.0.2       JWT creation and verification for auth tokens
+
+# ── Database ───────────────────────────────────────────────────────────────── #
+# mysql2@^3.14.5            MySQL/MariaDB driver with Promise support
+
+# ── Communication & Notifications ─────────────────────────────────────────── #
+# nodemailer@^8.0.1         Send SOS alert emails via SMTP/Gmail
+# twilio@^5.12.2            Send SOS SMS via Twilio REST API
+# axios@^1.13.6             HTTP client for calling external APIs from Node
+
+# ── Configuration ──────────────────────────────────────────────────────────── #
+# dotenv@^17.2.2            Loads environment variables from .env files
+
+# ── Dev Tools ──────────────────────────────────────────────────────────────── #
+# nodemon@^3.1.10           Auto-restarts server on file changes during dev
+
+
+################################################################################
+# ③ REACT / VITE FRONTEND DEPENDENCIES  (client/)                              #
+#    Source: client/package.json                                               #
+################################################################################
+
+# ── Core UI Framework ──────────────────────────────────────────────────────── #
+# react@^19.1.1             Core React library
+# react-dom@^19.1.1         React DOM rendering
+# react-router-dom@^7.8.2   Client-side routing and navigation
+
+# ── Mapping Libraries ──────────────────────────────────────────────────────── #
+# leaflet@^1.9.4            Open-source interactive map library (2D maps)
+# react-leaflet@^5.0.0      React bindings for Leaflet.js
+# @react-google-maps/api@^2.20.7  Google Maps SDK React wrapper
+
+# ── 3D Globe & WebGL ───────────────────────────────────────────────────────── #
+# react-globe.gl@^2.37.0    3D interactive globe (Three.js-based)
+# three@^0.183.1            3D graphics library – WebGL renderer
+
+# ── Icons ──────────────────────────────────────────────────────────────────── #
+# lucide-react@^0.542.0     Icon set as React components
+
+# ── Blockchain / Web3 ──────────────────────────────────────────────────────── #
+# web3@^4.16.0              Web3.js for blockchain interactions
+
+# ── Firebase (Auth, Firestore, Realtime DB) ────────────────────────────────── #
+# firebase@^12.9.0          Firebase SDK – Authentication, Firestore, Storage
+
+# ── Build Tooling (Dev) ────────────────────────────────────────────────────── #
+# vite@^7.1.2               Next-generation frontend build tool and dev server
+# @vitejs/plugin-react@^5.0.0  Vite plugin for React (Babel/SWC transforms)
+# eslint@^9.33.0            JavaScript/JSX linter
+# eslint-plugin-react-hooks@^5.2.0  ESLint rules for React Hooks
+# eslint-plugin-react-refresh@^0.4.20  ESLint rules for React Fast Refresh
+# @eslint/js@^9.33.0        ESLint core JS rules
+# globals@^16.3.0           Global variable definitions for ESLint
+# @types/react@^19.1.10     TypeScript type definitions for React
+# @types/react-dom@^19.1.7  TypeScript type definitions for ReactDOM
+
+
+################################################################################
+# ④ EXTERNAL SERVICES & APIs  (no install required – configured via .env)      #
+################################################################################
+
+# Firebase Project          Authentication, Firestore DB
+# Google Maps Platform      Geocoding, Map tiles, Directions API
+# Twilio                    SMS / OTP notifications
+# SMTP / Gmail / Nodemailer Transactional email (SOS alerts, OTP mail)
+# OSRM (router.project-osrm.org)  Open Source Routing Machine – turn-by-turn routes
+# Nominatim / OpenStreetMap Geocoding fallback for location search
+# Google News RSS           Crime news scraping (web.py)
+# The Hindu / TNIE / Daily Thanthi / Dinamalar  Tamil Nadu news scraping (web.py)
+# CesiumJS (CDN)            3D globe rendering (loaded via CDN in police dashboard)
+################################################################################
