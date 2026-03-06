@@ -14,13 +14,29 @@
 
 ---
 
+## 🎬 Demo Video
+
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=7u0uFJnlQc8" target="_blank">
+    <img src="https://img.youtube.com/vi/7u0uFJnlQc8/maxresdefault.jpg" alt="SmartNav Demo Video" width="800" style="border-radius:12px;" />
+  </a>
+  <br/><br/>
+  <a href="https://www.youtube.com/watch?v=7u0uFJnlQc8" target="_blank">
+    <img src="https://img.shields.io/badge/▶%20Watch%20Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch on YouTube" />
+  </a>
+  <p><i>SmartNav full system walkthrough — geospatial routing, 3D globe intelligence & SOS dispatch in action.</i></p>
+</div>
+
+---
+
 ## 📖 Table of Contents
-1. [What is SmartNav?](#-what-is-smartnav)
-2. [Why Web-Scraping? (The 99% Accuracy Advantage)](#-why-web-scraping-the-99-accuracy-advantage)
-3. [System Architecture Flow](#-system-architecture-flow)
-4. [Law Enforcement Interfaces (Gallery & Workflows)](#-law-enforcement-interfaces-gallery--workflows)
-5. [Core Technologies & Their Roles](#-core-technologies--their-roles)
-6. [Local Deployment Setup (A-Z Guide)](#-local-deployment-setup-a-z-guide)
+1. [Demo Video](#-demo-video)
+2. [What is SmartNav?](#-what-is-smartnav)
+3. [Why Web-Scraping? (The 99% Accuracy Advantage)](#-why-web-scraping-the-99-accuracy-advantage)
+4. [System Architecture Flow](#-system-architecture-flow)
+5. [Law Enforcement Interfaces (Gallery & Workflows)](#-law-enforcement-interfaces-gallery--workflows)
+6. [Core Technologies & Their Roles](#-core-technologies--their-roles)
+7. [Local Deployment Setup (A-Z Guide)](#-local-deployment-setup-a-z-guide)
 
 ---
 
