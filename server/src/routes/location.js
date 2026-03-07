@@ -1,6 +1,6 @@
 const express = require("express");
-const storeLocation  = require("../contorllers/storeLocation.js");
-const getLocations  = require("../contorllers/getLocation.js");
+const storeLocation  = require("../controllers/storeLocation.js");
+const getLocations  = require("../controllers/getLocation.js");
 
 const router = express.Router();
 

@@ -1,41 +1,64 @@
 .profile-container {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: var(--bg-primary);
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .profile-nav {
-  height: 72px;
-  display: flex;
-  justify-content: space-between;
+  height: 64px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  padding: 0 40px;
+  padding: 0 24px;
   margin: 16px;
   border-radius: 12px;
+  gap: 16px;
 }
 
 .profile-nav h1 {
   font-size: 18px;
   font-weight: 700;
   color: var(--text-primary);
+  text-align: center;
+  grid-column: 2;
 }
 
-.back-btn,
-.logout-action-btn {
-  display: flex;
+.back-btn {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   background: var(--bg-tertiary);
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.logout-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid var(--danger);
+  color: #ff4444;
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   transition: all 0.2s;
+  box-shadow: 0 0 10px rgba(255, 68, 68, 0.2);
+  width: fit-content;
+  white-space: nowrap;
+  justify-self: end;
 }
 
 .back-btn:hover {
@@ -44,8 +67,9 @@
 }
 
 .logout-action-btn:hover {
-  color: var(--danger);
-  border-color: var(--danger);
+  background: rgba(255, 68, 68, 0.2);
+  color: white;
+  border-color: #ff6666;
 }
 
 .profile-main {
