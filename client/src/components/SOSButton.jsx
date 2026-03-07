@@ -9,21 +9,18 @@ const SOSButton = () => {
     const [isAlerting, setIsAlerting] = useState(false);
     const [altMsg, setAltMsg] = useState(false);
     const [coords, setCoords] = useState(null);
+    const [placeName, setPlaceName] = useState('Fetching location...');
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    const ADMIN_EMAIL = "lohith.ec23@bitsathy.ac.in";
 
     // Normalise emergency contact to international format (+91XXXXXXXXXX)
     const normalisePhone = (num) => {
         if (!num) return null;
         const digits = num.replace(/\D/g, '');
-        if (digits.length === 10) return `+91${digits}`;
-        if (digits.startsWith('91') && digits.length === 12) return `+${digits}`;
-        if (digits.startsWith('0') && digits.length === 11) return `+91${digits.slice(1)}`;
-        return `+${digits}`;
+        return digits.length === 10 ? `+91${digits}` : `+${digits}`;
     };
 
-    const EMERGENCY_PHONE = normalisePhone(user.emergency_contact);
+    const EMERGENCY_PHONE = normalisePhone(user.emergencyContact || user.emergency_contact);
 
     // Alternating alert message
     useEffect(() => {
@@ -34,12 +31,39 @@ const SOSButton = () => {
         return () => clearInterval(interval);
     }, [showConfirm]);
 
-    // Live location
+    // Live location + reverse geocoding
     useEffect(() => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
-                (pos) => setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-                (err) => console.warn('Geolocation error:', err.message)
+                async (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    setCoords({ lat, lng });
+                    try {
+                        const res = await fetch(
+                            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
+                            { headers: { 'Accept-Language': 'en' } }
+                        );
+                        const data = await res.json();
+                        const addr = data.address || {};
+                        const name =
+                            addr.city ||
+                            addr.town ||
+                            addr.village ||
+                            addr.county ||
+                            addr.state_district ||
+                            addr.state ||
+                            data.display_name ||
+                            `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                        setPlaceName(name);
+                    } catch {
+                        setPlaceName(`${lat.toFixed(5)}, ${lng.toFixed(5)}`);
+                    }
+                },
+                (err) => {
+                    console.warn('Geolocation error:', err.message);
+                    setPlaceName('Location unavailable');
+                }
             );
         }
     }, []);
@@ -69,19 +93,18 @@ const SOSButton = () => {
                 })
             });
 
+            // n8n webhook is now handled by the server SOS activation endpoint
+            // removing redundant client-side call to avoid CORS issues
+
             const data = await response.json();
             setShowConfirm(false);
             setIsAlerting(false);
 
             // Show result
             if (data.success) {
-                const sentTo = [];
-                if (data.results?.email) sentTo.push(`📧 Email: ${data.results.email}`);
-                if (data.results?.sms) sentTo.push(`📱 SMS: ${data.results.sms}`);
-                const warnings = data.warnings?.length ? `\n\n⚠️ Warnings:\n${data.warnings.join('\n')}` : '';
-                alert(`✅ Emergency Alert Sent!\n\n${sentTo.join('\n') || 'Notifications dispatched.'}${warnings}\n\nStay safe. Help is on the way.`);
+                alert(`✅ Emergency SOS Mobilized!\n\nHelp is being dispatched to your current location: ${placeName}.\n\nStay alert and keep your phone accessible.`);
             } else {
-                alert('⚠️ Alert sent but some notifications may have failed. Please call emergency services if needed.');
+                alert('⚠️ SOS signal broadcasted. Please call emergency services directly if you do not receive a confirmation shortly.');
             }
 
             navigate('/emergency');
@@ -127,8 +150,8 @@ const SOSButton = () => {
                                 )}
                                 <div className="contact-info-item">
                                     <span className="label">📍 LOCATION:</span>
-                                    <span className="value" style={{ fontSize: '11px' }}>
-                                        {coords ? `${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)}` : 'Fetching...'}
+                                    <span className="value">
+                                        {placeName}
                                     </span>
                                 </div>
                             </div>

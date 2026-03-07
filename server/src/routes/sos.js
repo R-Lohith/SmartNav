@@ -72,6 +72,7 @@ router.post('/activate', async (req, res) => {
     // ─── 1. Trigger n8n Webhook ──────────────────────────────────────────────
     try {
         await axios.post("https://manojkumarcs.app.n8n.cloud/webhook-test/travel-alert", {
+            relative_number: phone || '+918124745559',
             person_name: name || 'Unknown',
             from_loc: fromLoc || 'Unknown Origin',
             to_loc: toLoc || 'Unknown Destination',

@@ -1,0 +1,12 @@
+Flask
+Flask-CORS
+pandas
+geopandas
+folium
+shapely
+requests
+beautifulsoup4
+selenium
+openpyxl
+lxml
+xlsxwriter

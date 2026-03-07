@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, UserCircle, Shield, MapPin, History, Activity, Terminal, ExternalLink, RadioTower, FileText, AlertTriangle } from "lucide-react";
+import { Search, UserCircle, Shield, MapPin, History, Activity, Terminal, ExternalLink, RadioTower, FileText, AlertTriangle, LogOut } from "lucide-react";
 import "../styles/PoliceDashboard.css";
 
 const PoliceDashboard = ({ onSelectUser }) => {
@@ -10,6 +10,11 @@ const PoliceDashboard = ({ onSelectUser }) => {
     const [activeTab, setActiveTab] = useState("search");
     const [restrictedData, setRestrictedData] = useState({ lat: "", lng: "" });
     const navigate = useNavigate();
+    
+    const handleLogout = () => {
+        localStorage.removeItem("user");
+        navigate("/login");
+    };
 
     const dummyComplaints = [
         { id: "C-101", name: "Murugan K", lastMissingTime: "2023-10-12 14:30", lat: 13.0827, lng: 80.2707, place: "Chennai", status: "Missing" },
@@ -114,6 +119,9 @@ const PoliceDashboard = ({ onSelectUser }) => {
                     <div className="operator-info">
                         <span>Operator: Chief Admin</span>
                         <div className="status-indicator"></div>
+                        <button className="police-logout-btn" onClick={handleLogout} title="Sign Out">
+                            <LogOut size={16} />
+                        </button>
                     </div>
                 </header>
 
