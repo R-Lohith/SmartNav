@@ -1,5 +1,5 @@
 ## Contributors
-**R-Lohith** – Project Maintainer
+**R-Lohith** – Contributor
 **MANOJ-KUMAR-CS** – Contributor
 **LINGESH GR** – Contributor
 
