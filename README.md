@@ -1,6 +1,6 @@
 ## Contributors
 **R-Lohith** – Project Maintainer
-**MANOJ-KUMAR-CS** – Developer
+**MANOJ-KUMAR-CS** – Contributor
 **LINGESH GR** – Contributor
 
 <div align="center">
