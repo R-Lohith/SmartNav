@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, UserCircle, Shield, MapPin, History, Activity, Terminal, ExternalLink, RadioTower, FileText, AlertTriangle, Lock, Trash2, Plus } from "lucide-react";
+import { Search, UserCircle, Shield, MapPin, History, Activity, Terminal, ExternalLink, RadioTower, FileText, AlertTriangle, Lock, Trash2, Plus, LogOut } from "lucide-react";
 import { MapContainer, TileLayer, Circle, Tooltip } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "../styles/PoliceDashboard.css";
@@ -14,6 +14,11 @@ const PoliceDashboard = ({ onSelectUser }) => {
     const [tempBlockedData, setTempBlockedData] = useState({ lat: "", lng: "", radius: "500", label: "" });
     const [tempBlockedZones, setTempBlockedZones] = useState([]);
     const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("user");
+        navigate("/login");
+    };
 
     useEffect(() => {
         const stored = localStorage.getItem("tempBlockedZones");
@@ -154,6 +159,9 @@ const PoliceDashboard = ({ onSelectUser }) => {
                     <div className="operator-info">
                         <span>Operator: Chief Admin</span>
                         <div className="status-indicator"></div>
+                        <button className="police-logout-btn" onClick={handleLogout} title="Sign Out">
+                            <LogOut size={16} />
+                        </button>
                     </div>
                 </header>
 

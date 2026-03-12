@@ -37,7 +37,7 @@ const ProfilePage = () => {
                     <ArrowLeft size={18} />
                     <span>Return</span>
                 </button>
-                <h1>Personal Intelligence Profile</h1>
+                <h1>Profile Page</h1>
                 <button className="logout-action-btn" onClick={handleLogout}>
                     <LogOut size={18} />
                     <span>Sign Out</span>

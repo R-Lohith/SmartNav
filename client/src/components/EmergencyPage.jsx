@@ -9,6 +9,11 @@ const EmergencyPage = ({ route }) => {
     const [familyNotified, setFamilyNotified] = useState(false);
     const [pageOpenedAt] = useState(new Date());
 
+    // Always read from localStorage at mount — ensures data survives page navigation
+    const savedRoute = JSON.parse(localStorage.getItem('currentRoute') || '{}');
+    const fromLoc = route?.fromLocation || savedRoute?.fromLocation || 'Unknown Origin';
+    const toLoc = route?.toLocation || savedRoute?.toLocation || 'Unknown Destination';
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,6 +30,7 @@ const EmergencyPage = ({ route }) => {
             return () => clearInterval(interval);
         }
     }, [familyNotified, timer]);
+
 
     const formatClockTime = (date) => {
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -44,15 +50,13 @@ const EmergencyPage = ({ route }) => {
 
     const handleNotifyFamily = async () => {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
-        try {
-            // Original n8n webhook
-            fetch("https://n8n-1-szop.onrender.com/webhook/alert_sos", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId: user.userId || "123", status: "PERSON_MISSED_AUTO" })
-            }).catch(e => console.log("n8n failed"));
 
-            // New server SOS with email lohith.ec23@bitsathy.ac.in
+        try {
+            // n8n webhook with required fields
+            // n8n webhook is now handled by the server SOS activation endpoint
+            // removing redundant client-side call to avoid CORS issues
+
+            // Server SOS
             await fetch("http://localhost:5000/api/sos/activate", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -60,6 +64,7 @@ const EmergencyPage = ({ route }) => {
                     userId: user.userId,
                     name: user.name,
                     email: user.email,
+                    phone: `+91${(user.emergencyContact || user.emergency_contact || '').replace(/\D/g, '')}`,
                     status: "PERSON_MISSED"
                 })
             });
@@ -103,11 +108,11 @@ const EmergencyPage = ({ route }) => {
                         <div className="intel-data">
                             <div className="data-item">
                                 <label>ORIGIN</label>
-                                <span>{route?.fromLocation || 'LAST KNOWN COORDINATES'}</span>
+                                <span>{fromLoc}</span>
                             </div>
                             <div className="data-item">
                                 <label>DESTINATION</label>
-                                <span>{route?.toLocation || 'TARGET DESTINATION'}</span>
+                                <span>{toLoc}</span>
                             </div>
                             <div className="data-item">
                                 <label>LOSS TIMESTAMP</label>

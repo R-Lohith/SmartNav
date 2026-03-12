@@ -169,6 +169,28 @@
     box-shadow: 0 0 10px var(--success);
 }
 
+.police-logout-btn {
+    background: rgba(255, 68, 68, 0.1);
+    border: 1px solid rgba(255, 68, 68, 0.2);
+    color: #ff4444;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 8px;
+}
+
+.police-logout-btn:hover {
+    background: #ff4444;
+    color: white;
+    border-color: #ff4444;
+    box-shadow: 0 0 10px rgba(255, 68, 68, 0.4);
+}
+
 /* Subject Profile */
 .subject-profile {
     padding: 40px;
