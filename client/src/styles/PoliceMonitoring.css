@@ -1019,3 +1019,27 @@
 .leaflet-popup-content {
     margin: 12px !important;
 }
+
+/* ── Temp Blocked Zone — Blue pulse animation ── */
+@keyframes pulse-blue {
+
+    0%,
+    100% {
+        box-shadow: 0 0 6px #00b4ff88, 0 0 12px #00b4ff44;
+        transform: scale(1);
+    }
+
+    50% {
+        box-shadow: 0 0 12px #00b4ffcc, 0 0 24px #00b4ff66;
+        transform: scale(1.25);
+    }
+}
+
+.feed-item.tempblocked {
+    border-color: #00b4ff;
+    background: rgba(0, 180, 255, 0.06);
+}
+
+.feed-item.tempblocked .feed-zone {
+    color: #00b4ff;
+}

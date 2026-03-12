@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Polyline } from "react-leaflet";
-import { Clock, Route as RouteIcon, Edit3, UserCircle, Shield, Wind, Thermometer, Radio, Navigation2, LogOut, ChevronRight, Activity, MapPin } from "lucide-react";
+import { Clock, Route as RouteIcon, Edit3, UserCircle, Shield, Wind, Thermometer, Radio, Navigation2, LogOut, ChevronRight, Activity, MapPin, Sparkles, Bot, RefreshCw } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import L from "leaflet";
 import SOSButton from "./SOSButton";
@@ -21,6 +21,13 @@ const MapView = ({ userId, onSimulateConnectionLoss, onLogout }) => {
   const [isNavigating, setIsNavigating] = useState(false);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [lastSpokenStep, setLastSpokenStep] = useState(-1);
+
+  // AI Bot State
+  const [aiInsights, setAiInsights] = useState([]);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState(null);
+  const [aiExpanded, setAiExpanded] = useState(true);
+  const hasFetchedAI = useRef(false);
 
   const route = routeData || {};
   const fromLocation = route.fromLocation || "Origin";
@@ -79,6 +86,48 @@ const MapView = ({ userId, onSimulateConnectionLoss, onLogout }) => {
     };
     fetchWeather();
   }, [currentPos]);
+
+  // Gemini AI: Fetch 7 key feature points about the destination
+  const fetchAIInsights = async (location) => {
+    if (!location || location === 'Destination') return;
+    setAiLoading(true);
+    setAiError(null);
+    setAiInsights([]);
+    try {
+      const GEMINI_API_KEY = 'AIzaSyDYYBMFIohz8ZwtKVnotDDaDIoO-nYuojY';
+      const prompt = `You are a local expert for Tamil Nadu, India. For the location "${location}", provide exactly 7 concise key feature points that a traveler must know. Topics must cover: safety level, notable landmarks, local transport, hospitals nearby, police station info, cultural highlights, and best time to visit. Return ONLY a JSON array of 7 strings, each string being one short key point (max 15 words each). No markdown, no extra text — just the raw JSON array.`;
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.7, maxOutputTokens: 500 }
+          })
+        }
+      );
+      if (!res.ok) throw new Error(`Gemini API error: ${res.status}`);
+      const data = await res.json();
+      const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '[]';
+      // Strip markdown code fences if any
+      const cleaned = rawText.replace(/```json|```/gi, '').trim();
+      const parsed = JSON.parse(cleaned);
+      setAiInsights(Array.isArray(parsed) ? parsed.slice(0, 7) : []);
+    } catch (err) {
+      console.error('AI Insights error:', err);
+      setAiError('Could not load AI insights. Check connection.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (toLocation && toLocation !== 'Destination' && !hasFetchedAI.current) {
+      hasFetchedAI.current = true;
+      fetchAIInsights(toLocation);
+    }
+  }, [toLocation]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -256,6 +305,53 @@ const MapView = ({ userId, onSimulateConnectionLoss, onLogout }) => {
                       <div className="status-dot"></div>
                     </div>
                   </div>
+                </section>
+
+                {/* ─── AI Bot: Destination Insights ─── */}
+                <section className="intel-section ai-insights-section">
+                  <div className="ai-insights-header" onClick={() => setAiExpanded(!aiExpanded)}>
+                    <div className="ai-label-group">
+                      <Bot size={15} className="ai-bot-icon" />
+                      <label>AI Destination Insights</label>
+                      <span className="ai-dest-tag">{toLocation}</span>
+                    </div>
+                    <div className="ai-header-actions">
+                      {!aiLoading && (
+                        <button
+                          className="ai-refresh-btn"
+                          title="Refresh insights"
+                          onClick={(e) => { e.stopPropagation(); hasFetchedAI.current = false; fetchAIInsights(toLocation); }}
+                        >
+                          <RefreshCw size={12} />
+                        </button>
+                      )}
+                      <ChevronRight size={14} className={aiExpanded ? 'rotate-90' : ''} />
+                    </div>
+                  </div>
+
+                  {aiExpanded && (
+                    <div className="ai-insights-body">
+                      {aiLoading && (
+                        <div className="ai-loading">
+                          <div className="ai-spinner"></div>
+                          <span>Gemini is analyzing {toLocation}…</span>
+                        </div>
+                      )}
+                      {aiError && !aiLoading && (
+                        <div className="ai-error">{aiError}</div>
+                      )}
+                      {!aiLoading && !aiError && aiInsights.length > 0 && (
+                        <ul className="ai-points-list">
+                          {aiInsights.map((point, idx) => (
+                            <li key={idx} className="ai-point-item" style={{ animationDelay: `${idx * 80}ms` }}>
+                              <span className="ai-point-num">{idx + 1}</span>
+                              <span className="ai-point-text">{point}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  )}
                 </section>
 
                 <div className="sidebar-footer">

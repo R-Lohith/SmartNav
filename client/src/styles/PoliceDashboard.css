@@ -499,3 +499,174 @@
     justify-content: center;
     margin-top: 10px;
 }
+
+/* ════════════════════════════
+   TEMP BLOCKED ZONE STYLES
+════════════════════════════ */
+
+.tempblocked-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.tempblocked-form-panel {
+    border-color: rgba(0, 180, 255, 0.35) !important;
+    box-shadow: 0 0 18px rgba(0, 180, 255, 0.08);
+}
+
+.tempblocked-form-panel h2 {
+    color: #00b4ff !important;
+}
+
+.tempblocked-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    line-height: 1.6;
+    background: rgba(0, 180, 255, 0.04);
+    border-left: 3px solid rgba(0, 180, 255, 0.4);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+}
+
+.tempblocked-submit-btn {
+    background: linear-gradient(135deg, rgba(0, 180, 255, 0.2), rgba(0, 100, 255, 0.2)) !important;
+    border: 1px solid rgba(0, 180, 255, 0.5) !important;
+    color: #00ccff !important;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+}
+
+.tempblocked-submit-btn:hover {
+    background: linear-gradient(135deg, rgba(0, 180, 255, 0.35), rgba(0, 100, 255, 0.35)) !important;
+    box-shadow: 0 0 16px rgba(0, 180, 255, 0.3);
+}
+
+.radius-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    opacity: 0.7;
+}
+
+/* Zone list */
+.tempblocked-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 380px;
+    overflow-y: auto;
+}
+
+.tempblocked-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.tempblocked-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 180, 255, 0.3);
+    border-radius: 2px;
+}
+
+.tempblocked-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(0, 180, 255, 0.05);
+    border: 1px solid rgba(0, 180, 255, 0.2);
+    border-radius: 8px;
+    transition: all 0.2s;
+    animation: fadeSlideIn 0.3s ease-out;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tempblocked-list-item:hover {
+    border-color: rgba(0, 180, 255, 0.45);
+    background: rgba(0, 180, 255, 0.09);
+}
+
+/* Pulsing blue dot */
+.tmpz-pulse {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #00b4ff;
+    box-shadow: 0 0 0 0 rgba(0, 180, 255, 0.7);
+    flex-shrink: 0;
+    animation: tmpzPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes tmpzPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 180, 255, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 8px rgba(0, 180, 255, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 180, 255, 0);
+    }
+}
+
+.tmpz-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.tmpz-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #00ccff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+
+.tmpz-coords {
+    font-size: 11px;
+    font-family: monospace;
+    color: var(--text-muted);
+}
+
+.tmpz-time {
+    font-size: 10px;
+    color: var(--text-muted);
+    opacity: 0.6;
+    margin-top: 2px;
+}
+
+.tmpz-delete-btn {
+    background: rgba(255, 55, 0, 0.08);
+    border: 1px solid rgba(255, 55, 0, 0.2);
+    border-radius: 6px;
+    color: #ff5530;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.18s;
+    flex-shrink: 0;
+}
+
+.tmpz-delete-btn:hover {
+    background: rgba(255, 55, 0, 0.2);
+    border-color: #ff3700;
+    box-shadow: 0 0 8px rgba(255, 55, 0, 0.3);
+}

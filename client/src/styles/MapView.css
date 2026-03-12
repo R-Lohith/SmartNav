@@ -1010,3 +1010,214 @@
         opacity: 1;
     }
 }
+
+/* ─── AI Destination Insights Bot Panel ─────────────────────────────────── */
+
+.ai-insights-section {
+    gap: 0;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(59, 130, 246, 0.04) 100%);
+}
+
+.ai-insights-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    cursor: pointer;
+    user-select: none;
+    background: rgba(139, 92, 246, 0.08);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+    transition: background 0.2s;
+}
+
+.ai-insights-header:hover {
+    background: rgba(139, 92, 246, 0.14);
+}
+
+.ai-label-group {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex: 1;
+    min-width: 0;
+}
+
+.ai-label-group label {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: rgba(167, 139, 250, 0.9) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.8px !important;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.ai-bot-icon {
+    color: #a78bfa;
+    filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.7));
+    flex-shrink: 0;
+}
+
+.ai-dest-tag {
+    font-size: 10px;
+    font-weight: 600;
+    background: rgba(139, 92, 246, 0.25);
+    color: #c4b5fd;
+    padding: 2px 7px;
+    border-radius: 20px;
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90px;
+}
+
+.ai-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.ai-header-actions svg {
+    color: rgba(167, 139, 250, 0.7);
+    transition: transform 0.25s ease;
+}
+
+.ai-header-actions .rotate-90 {
+    transform: rotate(90deg);
+}
+
+.ai-refresh-btn {
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 5px;
+    color: #a78bfa;
+    cursor: pointer;
+    padding: 3px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.ai-refresh-btn:hover {
+    background: rgba(139, 92, 246, 0.35);
+    transform: rotate(180deg);
+}
+
+.ai-insights-body {
+    padding: 10px 12px 12px;
+}
+
+/* Loading state */
+.ai-loading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 4px;
+    color: #a78bfa;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.ai-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(139, 92, 246, 0.2);
+    border-top-color: #a78bfa;
+    border-radius: 50%;
+    animation: ai-spin 0.8s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes ai-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Error state */
+.ai-error {
+    font-size: 11px;
+    color: #f87171;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 6px;
+    padding: 8px 10px;
+    line-height: 1.5;
+}
+
+/* Points list */
+.ai-points-list {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ai-point-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: rgba(139, 92, 246, 0.07);
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    border-radius: 7px;
+    padding: 7px 10px;
+    opacity: 0;
+    transform: translateX(-8px);
+    animation: ai-point-in 0.35s ease forwards;
+}
+
+@keyframes ai-point-in {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.ai-point-num {
+    min-width: 18px;
+    height: 18px;
+    background: linear-gradient(135deg, #7c3aed, #3b82f6);
+    color: white;
+    border-radius: 50%;
+    font-size: 9px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    box-shadow: 0 0 8px rgba(124, 58, 237, 0.45);
+}
+
+.ai-point-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.45;
+    flex: 1;
+}
+
+/* Scrollbar for sidebar with AI panel */
+.sidebar-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.3);
+    border-radius: 4px;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.55);
+}

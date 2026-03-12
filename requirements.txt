@@ -129,6 +129,8 @@ webdriver-manager       # Automatically manages ChromeDriver binary versions
 
 # Firebase Project          Authentication, Firestore DB
 # Google Maps Platform      Geocoding, Map tiles, Directions API
+# Google Gemini AI (REST)   AI Destination Insights – 7 key facts per destination (gemini-2.0-flash)
+#                             Endpoint: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
 # Twilio                    SMS / OTP notifications
 # SMTP / Gmail / Nodemailer Transactional email (SOS alerts, OTP mail)
 # OSRM (router.project-osrm.org)  Open Source Routing Machine – turn-by-turn routes

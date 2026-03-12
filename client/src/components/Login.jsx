@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { User, Lock, Mail, ArrowRight, Shield, Map as MapIcon, Loader2 } from "lucide-react";
 import { signInWithGoogle } from "../config/firebase";
+import { auth } from "../config/firebase";
+import { getRedirectResult } from "firebase/auth";
 import "../styles/Login.css";
 
 const Login = ({ onLogin }) => {
@@ -14,6 +16,29 @@ const Login = ({ onLogin }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
+
+    // Handle redirect result (fallback for popup-blocked browsers)
+    useEffect(() => {
+        getRedirectResult(auth)
+            .then((result) => {
+                if (result && result.user) {
+                    const user = result.user;
+                    const userData = {
+                        userId: user.uid,
+                        name: user.displayName,
+                        email: user.email,
+                        mobile: user.phoneNumber || "",
+                        role: "user",
+                    };
+                    localStorage.setItem("user", JSON.stringify(userData));
+                    if (onLogin) onLogin(userData);
+                    navigate("/destination");
+                }
+            })
+            .catch((error) => {
+                console.error("Redirect sign-in error:", error);
+            });
+    }, []);
 
     const handleChange = (e) => {
         setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -78,29 +103,37 @@ const Login = ({ onLogin }) => {
         setIsLoading(true);
         try {
             const user = await signInWithGoogle();
-            console.log("Logged in with Google:", user);
+            console.log("✅ Logged in with Google:", user.displayName);
 
-            // For now, we trust the Firebase user and create a profile
             const userData = {
                 userId: user.uid,
                 name: user.displayName,
                 email: user.email,
                 mobile: user.phoneNumber || "",
-                role: "user" // Default role
+                role: "user",
             };
 
             localStorage.setItem("user", JSON.stringify(userData));
             if (onLogin) onLogin(userData);
             navigate("/destination");
         } catch (error) {
-            console.error("Google login failed:", error);
-            if (error.code === 'auth/popup-blocked') {
-                alert("Sign-in popup was blocked. Please enable popups for this site.");
-            } else if (error.code === 'auth/operation-not-allowed') {
-                alert("Google Sign-In is not enabled in your Firebase Console. Please enable it.");
-            } else {
-                alert(`Google login failed: ${error.message}`);
+            // User simply closed the popup — not a real error, ignore silently
+            if (error.code === "auth/popup-closed-by-user" || error.code === "auth/cancelled-popup-request") {
+                console.log("ℹ️ Google Sign-In popup was closed by the user.");
+                return;
             }
+            // Popup was blocked by browser
+            if (error.code === "auth/popup-blocked") {
+                alert("⚠️ Popup was blocked by your browser.\n\nPlease allow popups for this site in your browser settings and try again.");
+                return;
+            }
+            // Google Sign-In not enabled in Firebase Console
+            if (error.code === "auth/operation-not-allowed") {
+                alert("Google Sign-In is not enabled. Please enable it in the Firebase Console under Authentication → Sign-in method.");
+                return;
+            }
+            console.error("Google login failed:", error);
+            alert(`Google login failed: ${error.message}`);
         } finally {
             setIsLoading(false);
         }

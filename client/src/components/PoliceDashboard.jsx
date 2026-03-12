@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, UserCircle, Shield, MapPin, History, Activity, Terminal, ExternalLink, RadioTower, FileText, AlertTriangle } from "lucide-react";
+import { Search, UserCircle, Shield, MapPin, History, Activity, Terminal, ExternalLink, RadioTower, FileText, AlertTriangle, Lock, Trash2, Plus } from "lucide-react";
+import { MapContainer, TileLayer, Circle, Tooltip } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 import "../styles/PoliceDashboard.css";
 
 const PoliceDashboard = ({ onSelectUser }) => {
@@ -9,7 +11,40 @@ const PoliceDashboard = ({ onSelectUser }) => {
     const [isSearching, setIsSearching] = useState(false);
     const [activeTab, setActiveTab] = useState("search");
     const [restrictedData, setRestrictedData] = useState({ lat: "", lng: "" });
+    const [tempBlockedData, setTempBlockedData] = useState({ lat: "", lng: "", radius: "500", label: "" });
+    const [tempBlockedZones, setTempBlockedZones] = useState([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const stored = localStorage.getItem("tempBlockedZones");
+        if (stored) setTempBlockedZones(JSON.parse(stored));
+    }, []);
+
+    const handleAddTempBlocked = (e) => {
+        e.preventDefault();
+        const { lat, lng, radius, label } = tempBlockedData;
+        if (!lat || !lng) return alert("Latitude and Longitude are required");
+        const newZone = {
+            id: Date.now(),
+            lat: parseFloat(lat),
+            lng: parseFloat(lng),
+            radius: parseFloat(radius) || 500,
+            label: label.trim() || `Blocked Zone`,
+            createdAt: new Date().toISOString(),
+        };
+        const updated = [newZone, ...tempBlockedZones];
+        setTempBlockedZones(updated);
+        localStorage.setItem("tempBlockedZones", JSON.stringify(updated));
+        window.dispatchEvent(new Event('storage'));
+        setTempBlockedData({ lat: "", lng: "", radius: "500", label: "" });
+    };
+
+    const handleDeleteTempBlocked = (id) => {
+        const updated = tempBlockedZones.filter(z => z.id !== id);
+        setTempBlockedZones(updated);
+        localStorage.setItem("tempBlockedZones", JSON.stringify(updated));
+        window.dispatchEvent(new Event('storage'));
+    };
 
     const dummyComplaints = [
         { id: "C-101", name: "Murugan K", lastMissingTime: "2023-10-12 14:30", lat: 13.0827, lng: 80.2707, place: "Chennai", status: "Missing" },
@@ -86,6 +121,11 @@ const PoliceDashboard = ({ onSelectUser }) => {
                     <div className={`nav-item ${activeTab === "restricted" ? "active" : ""}`} onClick={() => setActiveTab("restricted")}>
                         <AlertTriangle size={18} />
                         <span>Restricted Zones</span>
+                    </div>
+                    <div className={`nav-item ${activeTab === "tempblocked" ? "active" : ""}`} onClick={() => setActiveTab("tempblocked")} style={{ background: activeTab === "tempblocked" ? 'rgba(0,180,255,0.1)' : '', border: activeTab === "tempblocked" ? '1px solid rgba(0,180,255,0.3)' : '', color: activeTab === "tempblocked" ? '#00b4ff' : '' }}>
+                        <Lock size={18} style={{ color: activeTab === "tempblocked" ? '#00b4ff' : '' }} />
+                        <span>Temp Blocked Zones</span>
+                        {tempBlockedZones.length > 0 && <span style={{ marginLeft: 'auto', background: '#00b4ff', color: '#000', borderRadius: 10, padding: '1px 7px', fontSize: 10, fontWeight: 700 }}>{tempBlockedZones.length}</span>}
                     </div>
                     <div className="nav-item" onClick={() => navigate('/police/restricted-logs')}>
                         <FileText size={18} />
@@ -226,6 +266,104 @@ const PoliceDashboard = ({ onSelectUser }) => {
                                     <button type="submit" className="primary-action full-btn">Set Restricted Coordinates</button>
                                 </form>
                             </div>
+                        </div>
+                    )}
+
+                    {activeTab === "tempblocked" && (
+                        <div className="tempblocked-section">
+                            {/* Add Zone Form */}
+                            <div className="form-panel glass-panel tempblocked-form-panel">
+                                <h2><Lock size={20} style={{ color: '#00b4ff' }} /> Add Temporary Blocked Zone</h2>
+                                <p className="tempblocked-desc">Define a temporary restricted perimeter. It will appear on both the Admin Map and Live Monitoring Map in <span style={{ color: '#00b4ff', fontWeight: 700 }}>blue</span>.</p>
+                                <form className="restricted-form" onSubmit={handleAddTempBlocked}>
+                                    <div className="form-group row">
+                                        <div className="input-group">
+                                            <label>Zone Label</label>
+                                            <input
+                                                type="text"
+                                                value={tempBlockedData.label}
+                                                onChange={e => setTempBlockedData({ ...tempBlockedData, label: e.target.value })}
+                                                placeholder="e.g. VIP Corridor, Protest Area"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="form-group row">
+                                        <div className="input-group">
+                                            <label>Latitude</label>
+                                            <input type="number" step="any" value={tempBlockedData.lat} onChange={e => setTempBlockedData({ ...tempBlockedData, lat: e.target.value })} required placeholder="e.g. 13.0827" />
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Longitude</label>
+                                            <input type="number" step="any" value={tempBlockedData.lng} onChange={e => setTempBlockedData({ ...tempBlockedData, lng: e.target.value })} required placeholder="e.g. 80.2707" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Radius (meters)</label>
+                                        <input
+                                            type="number"
+                                            min="100" max="50000" step="100"
+                                            value={tempBlockedData.radius}
+                                            onChange={e => setTempBlockedData({ ...tempBlockedData, radius: e.target.value })}
+                                            placeholder="e.g. 500"
+                                        />
+                                        <span className="radius-hint">Perimeter radius in metres (min 100m, max 50km)</span>
+                                    </div>
+                                    <button type="submit" className="primary-action full-btn tempblocked-submit-btn">
+                                        <Plus size={16} /> Activate Blocked Zone
+                                    </button>
+                                </form>
+                            </div>
+
+                            {/* Mini-Map Preview */}
+                            {tempBlockedData.lat && tempBlockedData.lng && !isNaN(parseFloat(tempBlockedData.lat)) && !isNaN(parseFloat(tempBlockedData.lng)) && (
+                                <div className="form-panel glass-panel" style={{ padding: 20 }}>
+                                    <h2 style={{ fontSize: 14, marginBottom: 12 }}><MapPin size={16} style={{ color: '#00b4ff' }} /> Zone Preview</h2>
+                                    <div style={{ height: 220, borderRadius: 10, overflow: 'hidden', border: '1px solid rgba(0,180,255,0.3)' }}>
+                                        <MapContainer
+                                            key={`${tempBlockedData.lat}-${tempBlockedData.lng}-${tempBlockedData.radius}`}
+                                            center={[parseFloat(tempBlockedData.lat), parseFloat(tempBlockedData.lng)]}
+                                            zoom={13}
+                                            style={{ width: '100%', height: '100%' }}
+                                            zoomControl={false}
+                                            attributionControl={false}
+                                            scrollWheelZoom={false}
+                                        >
+                                            <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+                                            <Circle
+                                                center={[parseFloat(tempBlockedData.lat), parseFloat(tempBlockedData.lng)]}
+                                                radius={parseFloat(tempBlockedData.radius) || 500}
+                                                pathOptions={{ color: '#00b4ff', fillColor: '#00b4ff', fillOpacity: 0.25, weight: 2.5 }}
+                                            >
+                                                <Tooltip permanent direction="top"><span style={{ color: '#00b4ff', fontFamily: 'monospace', fontSize: 11 }}>🔵 {tempBlockedData.label || 'Temp Blocked Zone'}</span></Tooltip>
+                                            </Circle>
+                                        </MapContainer>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Active Zones List */}
+                            {tempBlockedZones.length > 0 && (
+                                <div className="form-panel glass-panel">
+                                    <h2><Lock size={18} style={{ color: '#00b4ff' }} /> Active Temp Blocked Zones <span style={{ color: '#00b4ff', fontSize: 12, marginLeft: 8 }}>({tempBlockedZones.length})</span></h2>
+                                    <div className="tempblocked-list">
+                                        {tempBlockedZones.map(zone => (
+                                            <div key={zone.id} className="tempblocked-list-item">
+                                                <div className="tmpz-pulse" />
+                                                <div className="tmpz-info">
+                                                    <div className="tmpz-label">{zone.label}</div>
+                                                    <div className="tmpz-coords">
+                                                        LAT: {zone.lat.toFixed(5)} · LNG: {zone.lng.toFixed(5)} · R: {zone.radius}m
+                                                    </div>
+                                                    <div className="tmpz-time">Added: {new Date(zone.createdAt).toLocaleString('en-IN')}</div>
+                                                </div>
+                                                <button className="tmpz-delete-btn" onClick={() => handleDeleteTempBlocked(zone.id)} title="Remove Zone">
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

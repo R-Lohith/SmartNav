@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-    MapContainer, TileLayer, CircleMarker, Tooltip, useMap
+    MapContainer, TileLayer, CircleMarker, Tooltip, Circle, useMap
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "../styles/PoliceMonitoring.css";
@@ -83,17 +83,18 @@ export default function PoliceMonitoring() {
     const [clock, setClock] = useState("");
     const alertTimer = useRef(null);
     const [restrictedAreas, setRestrictedAreas] = useState([]);
+    const [tempBlockedZones, setTempBlockedZones] = useState([]);
 
     useEffect(() => {
-        const loadRestricted = () => {
+        const loadAll = () => {
             const stored = localStorage.getItem("restrictedAreas");
-            if (stored) {
-                setRestrictedAreas(JSON.parse(stored));
-            }
+            if (stored) setRestrictedAreas(JSON.parse(stored));
+            const storedTmp = localStorage.getItem("tempBlockedZones");
+            if (storedTmp) setTempBlockedZones(JSON.parse(storedTmp));
         };
-        loadRestricted();
-        window.addEventListener('storage', loadRestricted);
-        return () => window.removeEventListener('storage', loadRestricted);
+        loadAll();
+        window.addEventListener('storage', loadAll);
+        return () => window.removeEventListener('storage', loadAll);
     }, []);
 
     /* ── Live clock ── */
@@ -261,6 +262,12 @@ export default function PoliceMonitoring() {
                                 <div className="stat-value">{summary.high}</div>
                                 <div className="stat-label">High Risk</div>
                             </div>
+                            {tempBlockedZones.length > 0 && (
+                                <div className="stat-item" style={{ background: 'rgba(0,180,255,0.08)', border: '1px solid rgba(0,180,255,0.25)', borderRadius: 8, padding: '10px 8px' }}>
+                                    <div className="stat-value" style={{ color: '#00b4ff' }}>{tempBlockedZones.length}</div>
+                                    <div className="stat-label" style={{ color: '#00b4ff' }}>Temp Blocked</div>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -285,6 +292,13 @@ export default function PoliceMonitoring() {
                                     <span className="legend-count">{item.count}</span>
                                 </div>
                             ))}
+                            {tempBlockedZones.length > 0 && (
+                                <div className="legend-item" style={{ borderColor: 'rgba(0,180,255,0.3)', background: 'rgba(0,180,255,0.05)' }}>
+                                    <div className="legend-dot" style={{ background: '#00b4ff', boxShadow: '0 0 8px #00b4ff88', animation: 'pulse-blue 1.5s ease-in-out infinite' }} />
+                                    <span className="legend-name" style={{ color: '#00b4ff' }}>Temp Blocked</span>
+                                    <span className="legend-count" style={{ color: '#00b4ff' }}>{tempBlockedZones.length}</span>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -292,6 +306,20 @@ export default function PoliceMonitoring() {
                     <div className="panel-card">
                         <div className="panel-title"><span className="panel-title-dot" style={{ background: "#ff3700", boxShadow: "0 0 6px #ff3700" }} />ALERT FEED</div>
                         <div className="intel-feed">
+                            {tempBlockedZones.map((z, i) => (
+                                <div
+                                    key={`tb-${i}`}
+                                    className="feed-item"
+                                    style={{ borderColor: 'rgba(0,180,255,0.3)', background: 'rgba(0,180,255,0.06)', cursor: 'pointer' }}
+                                    onClick={() => {
+                                        setMapTarget({ lat: z.lat, lng: z.lng });
+                                        triggerAlert(`🔵 TEMP BLOCKED ZONE: ${z.label} at (${z.lat.toFixed(4)}, ${z.lng.toFixed(4)}) — R: ${z.radius}m`);
+                                    }}
+                                >
+                                    <div className="feed-zone" style={{ color: '#00b4ff' }}>🔵 {z.label}</div>
+                                    <div className="feed-detail">Temp Blocked · R: {z.radius}m · {z.lat.toFixed(4)}, {z.lng.toFixed(4)}</div>
+                                </div>
+                            ))}
                             {topHighRisk.map((z, i) => (
                                 <div
                                     key={i}
@@ -431,6 +459,58 @@ export default function PoliceMonitoring() {
                                     </CircleMarker>
                                 );
                             })}
+
+                            {/* ── TEMP BLOCKED ZONES — Blue Circles with Radius ── */}
+                            {tempBlockedZones.map((zone, i) => (
+                                <Circle
+                                    key={`tmpblk-${i}`}
+                                    center={[zone.lat, zone.lng]}
+                                    radius={zone.radius}
+                                    pathOptions={{
+                                        color: '#00b4ff',
+                                        fillColor: '#00b4ff',
+                                        fillOpacity: 0.15,
+                                        weight: 2.5,
+                                        dashArray: '8 4',
+                                    }}
+                                    eventHandlers={{
+                                        click: () => {
+                                            setMapTarget({ lat: zone.lat, lng: zone.lng });
+                                            triggerAlert(`🔵 TEMP BLOCKED ZONE: ${zone.label} — Radius ${zone.radius}m`);
+                                        }
+                                    }}
+                                >
+                                    <Tooltip direction="top" offset={[0, -8]} opacity={1}>
+                                        <div style={{ fontFamily: "monospace", fontSize: 12, lineHeight: 1.7 }}>
+                                            <strong style={{ color: '#00b4ff' }}>🔵 TEMP BLOCKED ZONE</strong><br />
+                                            <span style={{ color: '#aad4ff' }}>{zone.label}</span><br />
+                                            Lat: {zone.lat}<br />
+                                            Lng: {zone.lng}<br />
+                                            Radius: {zone.radius}m
+                                        </div>
+                                    </Tooltip>
+                                </Circle>
+                            ))}
+                            {/* Center dot for each temp blocked zone */}
+                            {tempBlockedZones.map((zone, i) => (
+                                <CircleMarker
+                                    key={`tmpblk-dot-${i}`}
+                                    center={[zone.lat, zone.lng]}
+                                    radius={8}
+                                    pathOptions={{
+                                        color: '#00b4ff',
+                                        fillColor: '#00eaff',
+                                        fillOpacity: 0.95,
+                                        weight: 2,
+                                    }}
+                                    eventHandlers={{
+                                        click: () => {
+                                            setMapTarget({ lat: zone.lat, lng: zone.lng });
+                                            triggerAlert(`🔵 TEMP BLOCKED: ${zone.label}`);
+                                        }
+                                    }}
+                                />
+                            ))}
                         </MapContainer>
                     </div>
                 </div>
